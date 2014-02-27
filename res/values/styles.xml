@@ -14,17 +14,40 @@
   limitations under the License.
   -->
 
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="CalendarCell">
-        <item name="android:id">@android:id/text1</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">1</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:gravity">center</item>
+        <item name="android:padding">2dp</item>
+    </style>
+
+    <style name="CalendarCellHeader" parent="@style/CalendarCell">
+        <item name="android:id">@android:id/text1</item>
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textColor">@color/foreground_semi</item>
         <item name="android:textSize">18sp</item>
     </style>
+    
+    <style name="CalendarDay">
+        <item name="android:id">@android:id/text1</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_weight">4</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:gravity">bottom</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textColor">@color/foreground_semi</item>
+        <item name="android:textSize">16sp</item>
+        
+    </style>
 
+    
+    <style name="CalendarDay2" parent="@style/CalendarDay">
+        <item name="android:id">@android:id/text2</item>
+        <item name="android:layout_weight">5</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
 </resources>

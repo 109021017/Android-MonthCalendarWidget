@@ -29,11 +29,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 
 public class MonthCalendarWidget extends AppWidgetProvider {
     private static final String ACTION_PREVIOUS_MONTH
@@ -190,8 +193,9 @@ public class MonthCalendarWidget extends AppWidgetProvider {
                 RemoteViews cellRv = new RemoteViews(context.getPackageName(), cellLayoutResId);
                 cellRv.setTextViewText(android.R.id.text1,
                         Integer.toString(cal.get(Calendar.DAY_OF_MONTH)));
+                cellRv.setTextViewText(android.R.id.text2, getDayString(cal));
                 if (isFirstOfMonth) {
-                    cellRv.setTextViewText(R.id.month_label, DateFormat.format("MMM", cal));
+                	cellRv.setTextViewText(R.id.month_label, DateFormat.format("MMM", cal));
                 }
                 rowRv.addView(R.id.row_container, cellRv);
                 cal.add(Calendar.DAY_OF_MONTH, 1);
@@ -219,4 +223,70 @@ public class MonthCalendarWidget extends AppWidgetProvider {
         rv.setViewVisibility(R.id.month_bar, numWeeks <= 1 ? View.GONE : View.VISIBLE);
         appWidgetManager.updateAppWidget(appWidgetId, rv);
     }
+
+    String[] CNNums = {
+    		"一",
+    		"二",
+    		"三",
+    		"四",
+    		"五",
+    		"六",
+    		"七",
+    		"八",
+    		"九",
+    		"十"
+    };
+    
+	/**
+	 * 农历月名
+	 */
+	private static String[] MONTH_NAMES = {
+		"正","二","三","四","五","六","七","八","九","十","冬","腊"
+	};
+
+	/**
+	 * 农历月名
+	 * @return 农历月名
+	 */
+	private String getMonthString(YearMonthDay ymd){
+		int month = ymd.month;
+		month--;
+		int leap = ChineseLunisolarCalendar.getLeapMonth(ymd.year);
+		leap --;
+		String tempString = "";
+		if(leap > 0){
+			if(month == leap){
+				tempString+="闰";
+				month--;
+			}else if(month > leap){
+				month--;
+			}
+		}
+		tempString += (MONTH_NAMES[month]+"月");
+		return tempString;
+	}
+    
+	private String getDayString(Calendar cal) {
+        YearMonthDay ymd = ChineseLunisolarCalendar.gregorianCalendarToLunar((GregorianCalendar) cal);
+        StringBuffer sb = new StringBuffer();
+        if(ymd.day == 20){
+        	return "二十";
+        }
+        if(ymd.day == 1){
+        	return getMonthString(ymd);
+        }
+        if((ymd.day-1)/10 == 0){
+        	sb.append("初");
+        }else if(ymd.day/10 == 1){
+        	sb.append("十");
+        }else if(ymd.day/10 == 2){
+        	sb.append("廿");
+        }else if(ymd.day/10 == 3){
+        	sb.append("三");
+        }
+        
+        sb.append(CNNums[(ymd.day-1)%10]);
+        
+        return sb.toString();
+	}
 }
